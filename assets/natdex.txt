@@ -256,7 +256,7 @@ Probopass
 Pyukumuku
 Chinchou
 Lanturn
-Type:Null
+TypeNull
 Silvally
 Poipole
 Naganadel
