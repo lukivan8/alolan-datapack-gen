@@ -175,13 +175,21 @@ async function processSpawnFile(
       if (time !== "ALL" && time !== "SUN" && time !== "MOON") {
         throw new Error(`Invalid time: ${time}`);
       }
-      newContent = {
+      const legendaryContent = {
         id: spawn.id,
         spawnInfos: [
-          ...spawn.spawnInfos,
           ultraBeastOverworldTemplate(originalSpawnInfo, time),
         ],
       };
+
+      await Deno.writeTextFile(
+        `output\\spawning\\legendaries\\${pokemonName}.set.json`,
+        JSON.stringify(legendaryContent, null, 2),
+      );
+
+      console.log(`output\\spawning\\legendaries\\${pokemonName}.set.json`);
+
+      return;
     } else if (legendaries.has(pokemonName)) {
       const ultraBiomes = legendaries.get(pokemonName)!;
       const originalSpawnInfo = spawn.spawnInfos[0];
