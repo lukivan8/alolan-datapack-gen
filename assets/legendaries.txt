@@ -1,1 +1,24 @@
-Cresselia pixelmon:ultra_plant pixelmon:aboba
+Articuno pixelmon:ultra_deep_sea
+Zapdos pixelmon:ultra_plant
+Moltres pixelmon:ultra_crater
+Raikou pixelmon:ultra_plant
+Entei pixelmon:ultra_crater
+Suicune pixelmon:ultra_forest
+Regirock pixelmon:ultra_crater
+Regice pixelmon:ultra_deep_sea
+Registeel pixelmon:ultra_desert
+Uxie pixelmon:ultra_forest
+Mesprit pixelmon:ultra_forest
+Azelf pixelmon:ultra_forest
+Heatran pixelmon:ultra_crater
+Cresselia pixelmon:ultra_forest
+Cobalion pixelmon:ultra_plant
+Terrakion pixelmon:ultra_crater
+Virizion pixelmon:ultra_forest
+Tornados pixelmon:ultra_forest
+Thundurus pixelmon:ultra_forest
+Landorus pixelmon:ultra_crater
+Wo-Chien pixelmon:ultra_forest
+Chien-Pao pixelmon:ultra_deep_sea
+Ting-Lu pixelmon:ultra_plant
+Chi-Yu pixelmon:ultra_crater

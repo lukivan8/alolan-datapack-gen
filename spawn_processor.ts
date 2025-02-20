@@ -30,6 +30,10 @@ interface SpawnFile {
   spawnInfos: SpawnInfo[];
 }
 
+/*
+  Выгрузка файлов из папки assets
+*/
+
 const loadNameList = async (filename: string): Promise<Set<string>> => {
   const text = await Deno.readTextFile(`.\\assets\\${filename}`);
   return new Set(
@@ -54,6 +58,25 @@ const loadBiomedPokemon = async (
   return pokemon;
 };
 
+const loadTimedPokemon = async (
+  filename: string,
+): Promise<Map<string, string>> => {
+  const text = await Deno.readTextFile(`.\\assets\\${filename}`);
+  const pokemon = new Map<string, string>();
+  text.split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .forEach((line) => {
+      const [pokemon_name, time] = line.split(" ");
+      pokemon.set(pokemon_name.toLowerCase(), time);
+    });
+  return pokemon;
+};
+
+/*
+  Темплейты спавнов
+*/
+
 const emptySpawn: SpawnFile = {
   id: "",
   spawnInfos: [],
@@ -68,13 +91,28 @@ const alolanTemplate = (name: string, spawnInfos: SpawnInfo[]): SpawnFile => ({
 
 const ultraBeastOverworldTemplate = (
   originalSpawnInfo: SpawnInfo,
+  time: "SUN" | "MOON" | "ALL",
 ): SpawnInfo => ({
   ...originalSpawnInfo,
   tags: ["legendary"],
   interval: "legendary",
   condition: {
-    times: ["NIGHT"],
-    stringBiomes: ["all"],
+    times: time === "ALL"
+      ? undefined
+      : time === "SUN"
+      ? ["DAWN", "DAY"]
+      : ["DUSK", "NIGHT"],
+    stringBiomes: [
+      "all forests",
+      "swamps",
+      "mountainous",
+      "plains",
+      "flowery",
+      "evil",
+      "jungles",
+      "arid",
+      "freezing",
+    ],
   },
   rarity: 1.0,
 });
@@ -98,12 +136,15 @@ const megaUltraSpaceTemplate = (
   condition: {
     stringBiomes: ultraBiomes,
   },
-  rarity: 10.0,
 });
+
+/*
+  Основная обработка датапака
+*/
 
 async function processSpawnFile(
   filePath: string,
-  ultraBeasts: Set<string>,
+  ultraBeasts: Map<string, string>,
   legendaries: Map<string, string[]>,
   megaPokemon: Map<string, string[]>,
 ) {
@@ -130,11 +171,15 @@ async function processSpawnFile(
 
     if (ultraBeasts.has(pokemonName)) {
       const originalSpawnInfo = spawn.spawnInfos[0];
+      const time = ultraBeasts.get(pokemonName) || "ALL";
+      if (time !== "ALL" && time !== "SUN" && time !== "MOON") {
+        throw new Error(`Invalid time: ${time}`);
+      }
       newContent = {
         id: spawn.id,
         spawnInfos: [
           ...spawn.spawnInfos,
-          ultraBeastOverworldTemplate(originalSpawnInfo),
+          ultraBeastOverworldTemplate(originalSpawnInfo, time),
         ],
       };
     } else if (legendaries.has(pokemonName)) {
@@ -190,7 +235,7 @@ const [allowedPokemon, alolanForms, ultraBeasts, legendaries, megaPokemon] =
   await Promise.all([
     loadNameList("natdex.txt"),
     loadNameList("alolan_forms.txt"),
-    loadNameList("ultra_beasts.txt"),
+    loadTimedPokemon("ultra_beasts.txt"),
     loadBiomedPokemon("legendaries.txt"),
     loadBiomedPokemon("mega.txt"),
   ]);
